@@ -11,6 +11,7 @@ from .enums import (
     DocumentType,
     EventType,
     FactType,
+    GedcomXIdentifier,
     GenderType,
     IdentifierType,
     NamePartType,
@@ -24,7 +25,7 @@ from .enums import (
 class NetGedcomXURI(AnyUrl):
     @classmethod
     def __get_validators__(cls, *args, **kwargs):
-        yield super(NetGedcomXURI, cls).__get_validators__(*args, **kwargs)
+        yield from super(NetGedcomXURI, cls).__get_validators__(*args, **kwargs)
         yield cls.validate
 
     @classmethod
@@ -32,6 +33,7 @@ class NetGedcomXURI(AnyUrl):
         pattern = r"^https?://(www\.)?gedcomx\.org/"
         if re.match(pattern, value):
             ValueError("value must not use a base URI of http://gedcomx.org/")
+        return value
 
 
 class Language(str):
@@ -52,20 +54,6 @@ class Language(str):
         return value
 
 
-class GedcomXIdentifier(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value):
-        if not isinstance(value, str):
-            raise TypeError("string required")
-        pattern = r"^https?://(www\.)?gedcomx.org/"
-        if not re.match(pattern, value):
-            raise ValueError("invalid GEDCOM X identifier")
-
-
 class Email(str):
     @classmethod
     def __get_validators__(cls):
@@ -78,6 +66,7 @@ class Email(str):
         pattern = r"^(mailto:)?[\w\.-]+@[\w\.-]+(?:\.[\w]+)+$"
         if not re.match(pattern, value):
             raise ValueError("invalid email")
+        return value
 
 
 class Attribution(BaseModel):
@@ -240,9 +229,9 @@ class Agent(BaseModel):
 class Document(Conclusion):
     type: Optional[DocumentType]
     extracted: Optional[bool] = False
-    textType = Optional[str]
-    text = str
-    attribution = Optional[Attribution]
+    textType: Optional[str]
+    text: str
+    attribution: Optional[Attribution]
 
 
 class PlaceDescription(Subject):

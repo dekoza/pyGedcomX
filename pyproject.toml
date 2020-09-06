@@ -9,7 +9,7 @@ packages = [
 ]
 readme = "README.rst"
 repository = "https://github.com/dekoza/pyGedcomX"
-keywords = "genealogy"
+keywords = ["genealogy"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

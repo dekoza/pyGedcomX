@@ -1,6 +1,20 @@
+import re
 from enum import Enum
 
-from .basetypes import GedcomXIdentifier
+
+class GedcomXIdentifier(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value):
+        if not isinstance(value, str):
+            raise TypeError("string required")
+        pattern = r"^https?://(www\.)?gedcomx.org/"
+        if not re.match(pattern, value):
+            raise ValueError("invalid GEDCOM X identifier")
+        return value
 
 
 class Confidence(GedcomXIdentifier, Enum):
@@ -151,23 +165,23 @@ class ParentChildRelationshipFactMixin:
     surrogateParent = "http://gedcomx.org/SurrogateParent"
 
 
-class PersonalFactType(BaseFactType, PersonalFactMixin):
+class PersonalFactType(PersonalFactMixin, BaseFactType):
     pass
 
 
-class CoupleRelationshipFactType(BaseFactType, CoupleRelationshipFactMixin):
+class CoupleRelationshipFactType(CoupleRelationshipFactMixin, BaseFactType):
     pass
 
 
-class ParentChildRelationshipFactType(BaseFactType, ParentChildRelationshipFactMixin):
+class ParentChildRelationshipFactType(ParentChildRelationshipFactMixin, BaseFactType):
     pass
 
 
 class FactType(
-    BaseFactType,
     PersonalFactMixin,
     CoupleRelationshipFactMixin,
     ParentChildRelationshipFactMixin,
+    BaseFactType,
 ):
     """
     For descriptions please refer to:
