@@ -140,7 +140,7 @@ class Gender(Conclusion):
 
 class PlaceReference(BaseModel):
     original: Optional[str]
-    description_ref: Optional[HttpUrl]
+    descriptionRef: Optional[HttpUrl]
 
 
 class NamePart(BaseModel):
@@ -151,7 +151,7 @@ class NamePart(BaseModel):
 
 class NameForm(BaseModel):
     lang: Optional[Language]
-    full_text: Optional[str]
+    fullText: Optional[str]
     parts: Optional[List[NamePart]]
 
 
@@ -194,16 +194,16 @@ class TextValue(BaseModel):
 
 
 class OnlineAccount(BaseModel):
-    service_homepage: HttpUrl
-    account_name: str
+    serviceHomepage: HttpUrl
+    accountName: str
 
 
 class Address(BaseModel):
     value: Optional[str]
     city: Optional[str]
     country: Optional[str]
-    postal_code: Optional[str]
-    state_or_province: Optional[str]
+    postalCode: Optional[str]
+    stateOrProvince: Optional[str]
     street: Optional[str]
     street2: Optional[str]
     street3: Optional[str]
@@ -240,7 +240,7 @@ class Agent(BaseModel):
 class Document(Conclusion):
     type: Optional[DocumentType]
     extracted: Optional[bool] = False
-    text_type = Optional[str]
+    textType = Optional[str]
     text = str
     attribution = Optional[Attribution]
 
@@ -252,8 +252,8 @@ class PlaceDescription(Subject):
     jurisdiction: Optional[AnyUrl]
     latitude: Optional[float]
     longitude: Optional[float]
-    temporal_description: Optional[Date]
-    spatial_description: Optional[AnyUrl]
+    temporalDescription: Optional[Date]
+    spatialDescription: Optional[AnyUrl]
 
 
 class GroupRole(Conclusion):
@@ -277,16 +277,16 @@ class Coverage(BaseModel):
 
 class SourceDescription(BaseModel):
     id: Optional[str]
-    resource_type: Optional[ResourceType]
+    resourceType: Optional[ResourceType]
     citations: Union[SourceCitation, List[SourceCitation]]
-    media_type: Optional[str]
+    mediaType: Optional[str]
     about: Optional[AnyUrl]
     mediator: Optional[AnyUrl]
     publisher: Optional[AnyUrl]
     authors: Optional[List[AnyUrl]]
     sources: Optional[List[SourceReference]]
     analysis: Optional[AnyUrl]
-    component_of: Optional[SourceReference]
+    componentOf: Optional[SourceReference]
     titles: Optional[List[TextValue]]
     notes: Optional[List[Note]]
     attribution: Optional[Attribution]
