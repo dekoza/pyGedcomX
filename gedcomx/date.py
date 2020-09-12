@@ -20,8 +20,3 @@ class DateFormat:
     @classmethod
     def validate(cls, value):
         return value
-
-
-class Date(BaseModel):
-    original: Optional[str]
-    formal: Optional[DateFormat]

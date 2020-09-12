@@ -5,7 +5,7 @@ from typing import List, Optional, Union
 import language_tags
 from pydantic import AnyUrl, BaseModel, HttpUrl
 
-from .date import Date
+from .date import DateFormat
 from .enums import (
     Confidence,
     DocumentType,
@@ -25,7 +25,7 @@ from .enums import (
 class NetGedcomXURI(AnyUrl):
     @classmethod
     def __get_validators__(cls, *args, **kwargs):
-        yield from super(NetGedcomXURI, cls).__get_validators__(*args, **kwargs)
+        yield from super().__get_validators__(*args, **kwargs)
         yield cls.validate
 
     @classmethod
@@ -54,6 +54,15 @@ class Language(str):
         return value
 
 
+class ResourceReference(BaseModel):
+    resource: str
+
+
+class Date(BaseModel):
+    original: Optional[str]
+    formal: Optional[DateFormat]
+
+
 class Email(str):
     @classmethod
     def __get_validators__(cls):
@@ -70,10 +79,10 @@ class Email(str):
 
 
 class Attribution(BaseModel):
-    contributor: Optional[AnyUrl]
+    contributor: Optional[Union[ResourceReference, AnyUrl]]
     modified: Optional[datetime]
     changeMessage: Optional[str]
-    creator: Optional[AnyUrl]
+    creator: Optional[Union[ResourceReference, AnyUrl]]
     created: Optional[datetime]
 
 
@@ -83,7 +92,7 @@ class Qualifier(BaseModel):
 
 
 class SourceReference(BaseModel):
-    description: AnyUrl
+    description: str
     descriptionId: Optional[str]
     attribution: Optional[Attribution]
     qualifiers: Optional[List[Qualifier]]
@@ -100,7 +109,7 @@ class Conclusion(BaseModel):
     id: Optional[str]
     lang: Optional[Language]
     sources: Optional[List[SourceReference]]
-    analysis: Optional[AnyUrl]
+    analysis: Optional[Union[ResourceReference, AnyUrl]]
     notes: Optional[List[Note]]
     confidence: Optional[Confidence]
     attribution: Optional[Attribution]
@@ -167,8 +176,8 @@ class Person(Subject):
 
 class Relationship(Subject):
     type: Optional[RelationshipType]
-    person1: AnyUrl
-    person2: AnyUrl
+    person1: Union[ResourceReference, AnyUrl]
+    person2: Union[ResourceReference, AnyUrl]
     facts: Optional[List[Fact]]
 
 
@@ -183,7 +192,7 @@ class TextValue(BaseModel):
 
 
 class OnlineAccount(BaseModel):
-    serviceHomepage: HttpUrl
+    serviceHomepage: Union[ResourceReference, HttpUrl]
     accountName: str
 
 
@@ -202,8 +211,58 @@ class Address(BaseModel):
 
 
 class EventRole(Conclusion):
-    person: AnyUrl
+    person: Union[ResourceReference, AnyUrl]
     type: Optional[RoleType]
+
+
+class GroupRole(Conclusion):
+    person: Union[ResourceReference, AnyUrl]
+    type: Optional[RoleType]
+    date: Optional[Date]
+    details: Optional[str]
+
+
+class Coverage(BaseModel):
+    spatial: Optional[PlaceReference]
+    temporal: Optional[Date]
+
+
+class SourceDescription(BaseModel):
+    id: Optional[str]
+    resourceType: Optional[ResourceType]
+    citations: Union[SourceCitation, List[SourceCitation]]
+    mediaType: Optional[str]
+    about: Optional[Union[ResourceReference, AnyUrl]]
+    mediator: Optional[Union[ResourceReference, AnyUrl]]
+    publisher: Optional[Union[ResourceReference, AnyUrl]]
+    authors: Optional[List[Union[ResourceReference, AnyUrl]]]
+    sources: Optional[List[SourceReference]]
+    analysis: Optional[Union[ResourceReference, AnyUrl]]
+    componentOf: Optional[SourceReference]
+    titles: Optional[List[TextValue]]
+    notes: Optional[List[Note]]
+    attribution: Optional[Attribution]
+    rights: Optional[List[AnyUrl]]
+    coverage: Optional[List[Coverage]]
+    descriptions: Optional[List[TextValue]]
+    identifiers: Optional[List[Identifier]]
+    created: Optional[datetime]
+    modified: Optional[datetime]
+    published: Optional[datetime]
+    repository: Optional[Union[ResourceReference, AnyUrl]]
+
+
+class Agent(BaseModel):
+    id: Optional[str]
+    identifiers: Optional[List[Identifier]]
+    names: Optional[List[TextValue]]
+    homepage: Optional[Union[ResourceReference, HttpUrl]]
+    openid: Optional[Union[ResourceReference, HttpUrl]]
+    accounts: Optional[OnlineAccount]
+    emails: Optional[List[Union[ResourceReference, Email]]]
+    phones: Optional[List[Union[ResourceReference, str]]]
+    addresses: Optional[List[Address]]
+    person: Optional[Union[ResourceReference, AnyUrl]]
 
 
 class Event(Subject):
@@ -211,19 +270,6 @@ class Event(Subject):
     date: Optional[Date]
     place: Optional[PlaceReference]
     roles: Optional[List[EventRole]]
-
-
-class Agent(BaseModel):
-    id: Optional[str]
-    identifiers: Optional[List[Identifier]]
-    names: Optional[TextValue]
-    homepage: Optional[HttpUrl]
-    openid: Optional[HttpUrl]
-    accounts: Optional[OnlineAccount]
-    emails: Optional[List[Email]]
-    phones: Optional[List[str]]
-    addresses: Optional[List[Address]]
-    person: Optional[Person]
 
 
 class Document(Conclusion):
@@ -237,19 +283,12 @@ class Document(Conclusion):
 class PlaceDescription(Subject):
     names: List[TextValue]
     type: Optional[GedcomXIdentifier]
-    place: Optional[NetGedcomXURI]
-    jurisdiction: Optional[AnyUrl]
+    place: Optional[Union[ResourceReference, NetGedcomXURI]]
+    jurisdiction: Optional[Union[ResourceReference, AnyUrl]]
     latitude: Optional[float]
     longitude: Optional[float]
     temporalDescription: Optional[Date]
-    spatialDescription: Optional[AnyUrl]
-
-
-class GroupRole(Conclusion):
-    person: AnyUrl
-    type: Optional[RoleType]
-    date: Optional[Date]
-    details: Optional[str]
+    spatialDescription: Optional[Union[ResourceReference, AnyUrl]]
 
 
 class Group(Subject):
@@ -259,31 +298,14 @@ class Group(Subject):
     roles: Optional[GroupRole]
 
 
-class Coverage(BaseModel):
-    spatial: Optional[PlaceReference]
-    temporal: Optional[Date]
-
-
-class SourceDescription(BaseModel):
+class GedcomXObject(BaseModel):
     id: Optional[str]
-    resourceType: Optional[ResourceType]
-    citations: Union[SourceCitation, List[SourceCitation]]
-    mediaType: Optional[str]
-    about: Optional[AnyUrl]
-    mediator: Optional[AnyUrl]
-    publisher: Optional[AnyUrl]
-    authors: Optional[List[AnyUrl]]
-    sources: Optional[List[SourceReference]]
-    analysis: Optional[AnyUrl]
-    componentOf: Optional[SourceReference]
-    titles: Optional[List[TextValue]]
-    notes: Optional[List[Note]]
     attribution: Optional[Attribution]
-    rights: Optional[List[AnyUrl]]
-    coverage: Optional[List[Coverage]]
-    descriptions: Optional[List[TextValue]]
-    identifiers: Optional[List[Identifier]]
-    created: Optional[datetime]
-    modified: Optional[datetime]
-    published: Optional[datetime]
-    repository: Optional[AnyUrl]
+    persons: Optional[List[Person]]
+    relationships: Optional[List[Relationship]]
+    sourceDescriptions: Optional[List[SourceDescription]]
+    agents: Optional[List[Agent]]
+    events: Optional[List[Event]]
+    documents: Optional[List[Document]]
+    places: Optional[List[PlaceReference]]
+    groups: Optional[List[Group]]
