@@ -9,8 +9,17 @@ from dateutil.rrule import rrule
 from pydantic import BaseModel
 
 
-class DateFormat(BaseModel):
-    pass
+class DateFormat:
+    def __init__(self, value):
+        self.validate(value)
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value):
+        return value
 
 
 class Date(BaseModel):

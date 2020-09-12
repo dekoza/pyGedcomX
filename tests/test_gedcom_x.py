@@ -1,4 +1,4 @@
-from gedcom_x import __version__
+from gedcomx import __version__
 
 
 def test_version():

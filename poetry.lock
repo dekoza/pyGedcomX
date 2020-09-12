@@ -444,7 +444,7 @@ description = "Traitlets Python configuration system"
 name = "traitlets"
 optional = false
 python-versions = ">=3.7"
-version = "5.0.3"
+version = "5.0.4"
 
 [package.dependencies]
 ipython-genutils = "*"
@@ -495,7 +495,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "688b9bd2dd73fed901adc7f18ec40d2ff13bc10e72a6faa53eaecb4529c68a5e"
+content-hash = "7f3c414211234f5cfc45a401c33cffab80911b52b9d2bbddd40ea135b93e16e3"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -726,8 +726,8 @@ toml = [
     {file = "toml-0.10.1.tar.gz", hash = "sha256:926b612be1e5ce0634a2ca03470f95169cf16f939018233a670519cb4ac58b0f"},
 ]
 traitlets = [
-    {file = "traitlets-5.0.3-py3-none-any.whl", hash = "sha256:8bdadb17a04c844f444cdefaa3dee47a12ff14cf6277b9eeda29bfa0659d5987"},
-    {file = "traitlets-5.0.3.tar.gz", hash = "sha256:a2e91709a0330b6c5d497ed470b2feb1ed8da5c9dd807c6daab41f727b9391c9"},
+    {file = "traitlets-5.0.4-py3-none-any.whl", hash = "sha256:9664ec0c526e48e7b47b7d14cd6b252efa03e0129011de0a9c1d70315d4309c3"},
+    {file = "traitlets-5.0.4.tar.gz", hash = "sha256:86c9351f94f95de9db8a04ad8e892da299a088a64fd283f9f6f18770ae5eae1b"},
 ]
 typed-ast = [
     {file = "typed_ast-1.4.1-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:73d785a950fc82dd2a25897d525d003f6378d1cb23ab305578394694202a58c3"},
