@@ -2,14 +2,13 @@
 Implementation of GEDCOM X Date Format Specification.
 https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-specification.md
 """
-from datetime import datetime
-from typing import Optional, Union
+import re
+from typing import Optional
 
-import pendulum
-from lark.tree import Tree
+from lark.exceptions import UnexpectedCharacters
 from pydantic import BaseModel
 
-from .parsers import date_pattern, date_preparser
+from .parsers import date_pattern, date_preparser, duration_pattern
 
 
 class TimeZone(BaseModel):
@@ -53,15 +52,21 @@ class Recurrence(DateRange):
 
 
 class DateFormat:
-    def __init__(self, value: Union[datetime, str, Tree]) -> None:
-        if not isinstance(value, Tree):
-            value = self.validate(value)
-
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
 
     @classmethod
     def validate(cls, value):
-        parse_tree = date_preparser(value)
+        try:
+            parse_tree = date_preparser.parse(value)
+            for subtree in parse_tree.iter_subtrees():
+                for node in subtree.children:
+                    if getattr(node, "type", None) is not None:
+                        if node.type == "SIMPLE_DATE":
+                            assert re.match(date_pattern, node.value)
+                        elif node.type == "DURATION":
+                            assert re.match(duration_pattern, node.value)
+        except (UnexpectedCharacters, AssertionError):
+            raise ValueError("invalid date format")
         return value

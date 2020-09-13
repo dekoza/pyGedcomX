@@ -1,6 +1,6 @@
 import pytest
 
-from gedcomx.parsers import date_preparser
+from gedcomx.date import DateFormat
 
 # Let's test that no example from original specs throws an error.
 # https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-specification.md
@@ -18,13 +18,14 @@ from gedcomx.parsers import date_preparser
     ],
 )
 def test_parse_simple_date(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
     "value",
     [
-        # these needed to be prepended with minimal simple date because we cannot handle duration being alone
+        # These needed to be prepended with minimal simple date
+        # because doesn't allow duration being alone.
         "+1964/P17Y6M2D",
         "+1964/P186D",
         "+1964/PT5H17M",
@@ -32,7 +33,7 @@ def test_parse_simple_date(value):
     ],
 )
 def test_parse_duration(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
@@ -44,7 +45,7 @@ def test_parse_duration(value):
     ],
 )
 def test_closed_date_range(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
@@ -58,7 +59,7 @@ def test_closed_date_range(value):
     ],
 )
 def test_open_date_range(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
@@ -70,7 +71,7 @@ def test_open_date_range(value):
     ],
 )
 def test_recurring(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
@@ -83,7 +84,7 @@ def test_recurring(value):
     ],
 )
 def test_approx_date(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)
 
 
 @pytest.mark.parametrize(
@@ -100,4 +101,4 @@ def test_approx_date(value):
     ],
 )
 def test_approx_date_range(value):
-    assert date_preparser.parse(value)
+    assert DateFormat.validate(value)

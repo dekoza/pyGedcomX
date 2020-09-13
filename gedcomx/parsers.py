@@ -42,17 +42,20 @@ date_pattern = re.compile(
 duration_pattern = re.compile(
     # This pattern is broader than original specification.
     # Values not conforming to specs (for example "1000 seconds")
-    # should be recalculated during parsing and return in canonical form.
+    # should be recalculated during parsing (using pendulum)
+    # and returned in canonical form.
     r"""
     ^
     P
     (?P<years>\d+Y)?
     (?P<months>\d+M)?
     (?P<days>\d+D)?
-    T
-    (?P<hours>\d+H)?
-    (?P<minutes>\d+M)?
-    (?P<seconds>\d+S)?
+    (
+        T
+        (?P<hours>\d+H)?
+        (?P<minutes>\d+M)?
+        (?P<seconds>\d+S)?
+    )?
     $
     """,
     re.X,
