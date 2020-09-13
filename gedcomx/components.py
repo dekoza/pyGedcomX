@@ -22,6 +22,21 @@ from .enums import (
 )
 
 
+class Hashtag(str):
+    @classmethod
+    def __get_validators__(cls, *args, **kwargs):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value: str):
+        if value[0] != "#":
+            ValueError("Hashtag must start with a '#' sign.")
+        return value
+
+
+GedURI = Union[Hashtag, AnyUrl]
+
+
 class NetGedcomXURI(AnyUrl):
     @classmethod
     def __get_validators__(cls, *args, **kwargs):
@@ -54,11 +69,16 @@ class Language(str):
         return value
 
 
-class ResourceReference(BaseModel):
+class GedcomXElement(BaseModel):
+    pass
+    # preparing for xml support
+
+
+class ResourceReference(GedcomXElement):
     resource: str
 
 
-class Date(BaseModel):
+class Date(GedcomXElement):
     original: Optional[str]
     formal: Optional[DateFormat]
 
@@ -78,50 +98,50 @@ class Email(str):
         return value
 
 
-class Attribution(BaseModel):
-    contributor: Optional[Union[ResourceReference, AnyUrl]]
+class Attribution(GedcomXElement):
+    contributor: Optional[Union[ResourceReference, GedURI]]
     modified: Optional[datetime]
     changeMessage: Optional[str]
-    creator: Optional[Union[ResourceReference, AnyUrl]]
+    creator: Optional[Union[ResourceReference, GedURI]]
     created: Optional[datetime]
 
 
-class Qualifier(BaseModel):
-    name: AnyUrl
+class Qualifier(GedcomXElement):
+    name: GedURI
     value: Optional[str]
 
 
-class SourceReference(BaseModel):
+class SourceReference(GedcomXElement):
     description: str
     descriptionId: Optional[str]
     attribution: Optional[Attribution]
     qualifiers: Optional[List[Qualifier]]
 
 
-class Note(BaseModel):
+class Note(GedcomXElement):
     lang: Optional[Language]
     subject: Optional[str]
     text: str
     attribution: Optional[Attribution]
 
 
-class Conclusion(BaseModel):
+class Conclusion(GedcomXElement):
     id: Optional[str]
     lang: Optional[Language]
     sources: Optional[List[SourceReference]]
-    analysis: Optional[Union[ResourceReference, AnyUrl]]
+    analysis: Optional[Union[ResourceReference, GedURI]]
     notes: Optional[List[Note]]
     confidence: Optional[Confidence]
     attribution: Optional[Attribution]
 
 
-class Identifier(BaseModel):
-    value: AnyUrl
+class Identifier(GedcomXElement):
+    value: GedURI
     type: IdentifierType
 
 
-class EvidenceReference(BaseModel):
-    resource: AnyUrl
+class EvidenceReference(GedcomXElement):
+    resource: GedURI
     attribution: Optional[Attribution]
 
 
@@ -136,18 +156,18 @@ class Gender(Conclusion):
     type: GenderType
 
 
-class PlaceReference(BaseModel):
+class PlaceReference(GedcomXElement):
     original: Optional[str]
     descriptionRef: Optional[HttpUrl]
 
 
-class NamePart(BaseModel):
+class NamePart(GedcomXElement):
     type: Optional[NamePartType]
     value: str
     qualifiers: Optional[Qualifier]
 
 
-class NameForm(BaseModel):
+class NameForm(GedcomXElement):
     lang: Optional[Language]
     fullText: Optional[str]
     parts: Optional[List[NamePart]]
@@ -176,27 +196,27 @@ class Person(Subject):
 
 class Relationship(Subject):
     type: Optional[RelationshipType]
-    person1: Union[ResourceReference, AnyUrl]
-    person2: Union[ResourceReference, AnyUrl]
+    person1: Union[ResourceReference, GedURI]
+    person2: Union[ResourceReference, GedURI]
     facts: Optional[List[Fact]]
 
 
-class SourceCitation(BaseModel):
+class SourceCitation(GedcomXElement):
     lang: Optional[Language]
     value: str
 
 
-class TextValue(BaseModel):
+class TextValue(GedcomXElement):
     lang: Optional[Language]
     value: str
 
 
-class OnlineAccount(BaseModel):
+class OnlineAccount(GedcomXElement):
     serviceHomepage: Union[ResourceReference, HttpUrl]
     accountName: str
 
 
-class Address(BaseModel):
+class Address(GedcomXElement):
     value: Optional[str]
     city: Optional[str]
     country: Optional[str]
@@ -211,48 +231,48 @@ class Address(BaseModel):
 
 
 class EventRole(Conclusion):
-    person: Union[ResourceReference, AnyUrl]
+    person: Union[ResourceReference, GedURI]
     type: Optional[RoleType]
 
 
 class GroupRole(Conclusion):
-    person: Union[ResourceReference, AnyUrl]
+    person: Union[ResourceReference, GedURI]
     type: Optional[RoleType]
     date: Optional[Date]
     details: Optional[str]
 
 
-class Coverage(BaseModel):
+class Coverage(GedcomXElement):
     spatial: Optional[PlaceReference]
     temporal: Optional[Date]
 
 
-class SourceDescription(BaseModel):
+class SourceDescription(GedcomXElement):
     id: Optional[str]
     resourceType: Optional[ResourceType]
     citations: Union[SourceCitation, List[SourceCitation]]
     mediaType: Optional[str]
-    about: Optional[Union[ResourceReference, AnyUrl]]
-    mediator: Optional[Union[ResourceReference, AnyUrl]]
-    publisher: Optional[Union[ResourceReference, AnyUrl]]
-    authors: Optional[List[Union[ResourceReference, AnyUrl]]]
+    about: Optional[Union[ResourceReference, GedURI]]
+    mediator: Optional[Union[ResourceReference, GedURI]]
+    publisher: Optional[Union[ResourceReference, GedURI]]
+    authors: Optional[List[Union[ResourceReference, GedURI]]]
     sources: Optional[List[SourceReference]]
-    analysis: Optional[Union[ResourceReference, AnyUrl]]
+    analysis: Optional[Union[ResourceReference, GedURI]]
     componentOf: Optional[SourceReference]
     titles: Optional[List[TextValue]]
     notes: Optional[List[Note]]
     attribution: Optional[Attribution]
-    rights: Optional[List[AnyUrl]]
+    rights: Optional[List[GedURI]]
     coverage: Optional[List[Coverage]]
     descriptions: Optional[List[TextValue]]
     identifiers: Optional[List[Identifier]]
     created: Optional[datetime]
     modified: Optional[datetime]
     published: Optional[datetime]
-    repository: Optional[Union[ResourceReference, AnyUrl]]
+    repository: Optional[Union[ResourceReference, GedURI]]
 
 
-class Agent(BaseModel):
+class Agent(GedcomXElement):
     id: Optional[str]
     identifiers: Optional[List[Identifier]]
     names: Optional[List[TextValue]]
@@ -262,7 +282,7 @@ class Agent(BaseModel):
     emails: Optional[List[Union[ResourceReference, Email]]]
     phones: Optional[List[Union[ResourceReference, str]]]
     addresses: Optional[List[Address]]
-    person: Optional[Union[ResourceReference, AnyUrl]]
+    person: Optional[Union[ResourceReference, GedURI]]
 
 
 class Event(Subject):
@@ -284,11 +304,11 @@ class PlaceDescription(Subject):
     names: List[TextValue]
     type: Optional[GedcomXIdentifier]
     place: Optional[Union[ResourceReference, NetGedcomXURI]]
-    jurisdiction: Optional[Union[ResourceReference, AnyUrl]]
+    jurisdiction: Optional[Union[ResourceReference, GedURI]]
     latitude: Optional[float]
     longitude: Optional[float]
     temporalDescription: Optional[Date]
-    spatialDescription: Optional[Union[ResourceReference, AnyUrl]]
+    spatialDescription: Optional[Union[ResourceReference, GedURI]]
 
 
 class Group(Subject):
@@ -298,7 +318,11 @@ class Group(Subject):
     roles: Optional[GroupRole]
 
 
-class GedcomXObject(BaseModel):
+class GedcomXObject(GedcomXElement):
+    """
+    Main container used only to read/write files.
+    """
+
     id: Optional[str]
     attribution: Optional[Attribution]
     persons: Optional[List[Person]]

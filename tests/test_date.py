@@ -24,9 +24,5 @@ def test_range():
     assert end.to_formal_string() == "+1910"
 
 
-def test_duration():
-    duration = DateFormat("P1Y35D")
-
-
 def test_recurring():
     recurring = DateFormat("R3/+1900/P1Y")
