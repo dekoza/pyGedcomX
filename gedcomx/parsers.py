@@ -1,8 +1,10 @@
+# flake8: noqa
 import re
 
 import lark
 
 date_pattern = re.compile(
+    # against specs core, but respects examples from specs
     r"""
     ^
     (
@@ -22,9 +24,9 @@ date_pattern = re.compile(
                         (?P<minute>\d{2})
                         (
                             :
-                            (?P<second>\d{1,2})  # against specs core, but respects examples from specs
+                            (?P<second>\d{1,2})
                         )?
-                    )?  # against specs core, but respects examples from specs
+                    )?
                     (?P<tz>
                         [\+-]\d{2}
                         (:\d{2})?
@@ -35,6 +37,24 @@ date_pattern = re.compile(
         )?
     )?
     $""",
+    re.X,
+)
+duration_pattern = re.compile(
+    # This pattern is broader than original specification.
+    # Values not conforming to specs (for example "1000 seconds")
+    # should be recalculated during parsing and return in canonical form.
+    r"""
+    ^
+    P
+    (?P<years>\d+Y)?
+    (?P<months>\d+M)?
+    (?P<days>\d+D)?
+    T
+    (?P<hours>\d+H)?
+    (?P<minutes>\d+M)?
+    (?P<seconds>\d+S)?
+    $
+    """,
     re.X,
 )
 
