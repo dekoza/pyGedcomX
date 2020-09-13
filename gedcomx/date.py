@@ -5,10 +5,10 @@ https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-s
 import re
 from typing import Optional
 
-from lark.exceptions import UnexpectedCharacters
+from lark.exceptions import UnexpectedCharacters, UnexpectedEOF
 from pydantic import BaseModel
 
-from .parsers import date_pattern, date_preparser, duration_pattern
+from .parsers import date_preparser, duration_pattern
 
 
 class TimeZone(BaseModel):
@@ -63,10 +63,9 @@ class DateFormat:
             for subtree in parse_tree.iter_subtrees():
                 for node in subtree.children:
                     if getattr(node, "type", None) is not None:
-                        if node.type == "SIMPLE_DATE":
-                            assert re.match(date_pattern, node.value)
-                        elif node.type == "DURATION":
+                        # TODO: check if pendulum accepts the date
+                        if node.type == "DURATION":
                             assert re.match(duration_pattern, node.value)
-        except (UnexpectedCharacters, AssertionError):
+        except (UnexpectedCharacters, UnexpectedEOF, AssertionError, TypeError):
             raise ValueError("invalid date format")
         return value

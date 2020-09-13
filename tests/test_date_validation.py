@@ -102,3 +102,25 @@ def test_approx_date(value):
 )
 def test_approx_date_range(value):
     assert DateFormat.validate(value)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "",
+        None,
+        1,
+        "humbug",
+        "+10000",
+        "-10000",
+        "1980",
+        "AA+1752",
+        "A-0001-04/+005",
+        "A-0001-04/5",
+        "A+1633-02-19/P34S",
+        "R+1776-04-02/+1776-04-09",
+    ],
+)
+def test_if_bad_format_raises_exceptions(value):
+    with pytest.raises(ValueError):
+        DateFormat.validate(value)
