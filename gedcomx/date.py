@@ -2,17 +2,60 @@
 Implementation of GEDCOM X Date Format Specification.
 https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-specification.md
 """
-from typing import Optional
+from datetime import datetime
+from typing import Optional, Union
 
 import pendulum
-from dateutil.rrule import rrule
-from lark import Lark
+from lark.tree import Tree
 from pydantic import BaseModel
+
+from .parsers import date_pattern, date_preparser
+
+
+class TimeZone(BaseModel):
+    hours: int
+    minutes: Optional[int] = 0
+
+
+class SimpleDate(BaseModel):
+    year: int
+    month: Optional[int]
+    day: Optional[int]
+    hour: Optional[int]
+    minute: Optional[int]
+    second: Optional[int]
+    timezone: Optional[TimeZone]
+
+
+class Duration(BaseModel):
+    years: Optional[int]
+    months: Optional[int]
+    days: Optional[int]
+    hours: Optional[int]
+    minutes: Optional[int]
+    seconds: Optional[int]
+
+
+class ApproxDate(SimpleDate):
+    approx: Optional[bool] = False
+
+
+class DateRange(BaseModel):
+    approx: Optional[bool] = False
+    start_date: Optional[SimpleDate]
+    end_date: Optional[SimpleDate]
+    # TODO: specs allow duration but it can be just used to calculate end_date
+    duration: Optional[Duration]
+
+
+class Recurrence(DateRange):
+    repetitions: Optional[int]
 
 
 class DateFormat:
-    def __init__(self, value):
-        self.validate(value)
+    def __init__(self, value: Union[datetime, str, Tree]) -> None:
+        if not isinstance(value, Tree):
+            value = self.validate(value)
 
     @classmethod
     def __get_validators__(cls):
@@ -20,68 +63,5 @@ class DateFormat:
 
     @classmethod
     def validate(cls, value):
+        parse_tree = date_preparser(value)
         return value
-
-
-date_pattern = r"""
-    ^
-    (
-        (?P<approx>A?)
-        (?P<sign>[\+-])
-        (?P<year>\d{4})
-        (
-            -
-            (?P<month>\d{2})
-            (
-                -
-                (?P<day>\d{2})
-                (
-                    T
-                    (?P<hour>\d{2})
-                    (
-                        :
-                        (?P<minute>\d{2})
-                        (
-                            :
-                            (?P<second>\d{1,2})
-                        )?
-                    )?
-                    (?P<tz>
-                        [\+-]\d{2}
-                        (:\d{2})?
-                    )?
-                )?
-            )?
-        )?
-    )?
-    $"""
-
-
-grammar = r"""
-
-start: date_format
-
-date_format: simple_date
-           | approx
-           | (closed_date_range|open_date_range)
-           | recurring
-
-simple_date: /[\+-]\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{1,2})?)?([\+-]\d{2}(:\d{2})?)?)?)?)?/
-
-duration: /P.+/
-
-closed_date_range: simple_date "/" simple_date
-                  | simple_date "/" duration
-open_date_range: simple_date "/"
-               | "/" simple_date
-
-approx: "A" simple_date
-      | "A" (closed_date_range|open_date_range)
-
-recurring: "R" closed_date_range
-         | "R" NUMBER closed_date_range
-
-NUMBER: DIGIT+
-
-%import common.DIGIT
-"""
