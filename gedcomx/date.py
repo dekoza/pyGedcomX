@@ -2,14 +2,13 @@
 Implementation of GEDCOM X Date Format Specification.
 https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-specification.md
 """
-import re
 from typing import Optional
 
 import pendulum
 from lark.exceptions import UnexpectedCharacters, UnexpectedEOF
 from pydantic import BaseModel
 
-from .parsers import date_preparser, duration_pattern
+from .parsers import date_preparser
 
 
 class TimeZone(BaseModel):
@@ -79,12 +78,10 @@ class DateFormat(str):
             for subtree in parse_tree.iter_subtrees():
                 for node in subtree.children:
                     if getattr(node, "type", None) is not None:
-                        # At this point lark has proven that at least the date
-                        # looks kinda OK. Let's use pendulum to be sure.
+                        # At this point lark has proven that duration is OK and
+                        # the date looks kinda OK. Let's use pendulum to be sure.
                         if node.type == "SIMPLE_DATE":
                             cls._check_with_pendulum(node.value)
-                        if node.type == "DURATION":
-                            assert re.match(duration_pattern, node.value)
         except (UnexpectedCharacters, UnexpectedEOF, AssertionError, TypeError):
             raise ValueError("invalid date format")
         return cls(value)

@@ -61,7 +61,6 @@ duration_pattern = re.compile(
     re.X,
 )
 
-
 grammar = r"""
 
 start: date_format
@@ -74,7 +73,7 @@ date_format: SIMPLE_DATE
 
 SIMPLE_DATE: /[\+-]\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{1,2})?)?([\+-]\d{2}(:\d{2})?|Z)?)?)?)?/
 
-DURATION: /P.+/
+DURATION: /P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?/
 
 closed_date_range: SIMPLE_DATE "/" SIMPLE_DATE
                   | SIMPLE_DATE "/" DURATION
