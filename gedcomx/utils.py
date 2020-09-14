@@ -1,7 +1,16 @@
 # flake8: noqa
 import re
+import xml.etree.ElementTree as ET
 
 import lark
+
+
+def xmlize(obj):
+    if hasattr(obj, "xml"):
+        return obj.xml()
+    tag = obj.__class__.__name__
+    e = ET.Element(tag)
+
 
 date_pattern = re.compile(
     # against specs core, but respects examples from specs
@@ -39,6 +48,7 @@ date_pattern = re.compile(
     $""",
     re.X,
 )
+
 duration_pattern = re.compile(
     # This pattern is broader than original specification.
     # Values not conforming to specs (for example "1000 seconds")
@@ -62,31 +72,22 @@ duration_pattern = re.compile(
 )
 
 grammar = r"""
-
 start: date_format
-
 date_format: SIMPLE_DATE
            | approx
            | closed_date_range
            | open_date_range
            | recurring
-
 SIMPLE_DATE: /[\+-]\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{1,2})?)?([\+-]\d{2}(:\d{2})?|Z)?)?)?)?/
-
 DURATION: /P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?/
-
 closed_date_range: SIMPLE_DATE "/" SIMPLE_DATE
                   | SIMPLE_DATE "/" DURATION
 open_date_range: SIMPLE_DATE "/"
                | "/" SIMPLE_DATE
-
 approx: "A" (SIMPLE_DATE|closed_date_range|open_date_range)
-
 recurring: "R/" closed_date_range
          | "R" COUNT "/" closed_date_range
-
 COUNT: DIGIT+
-
 %import common.DIGIT
 """
 

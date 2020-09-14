@@ -8,7 +8,7 @@ import pendulum
 from lark.exceptions import UnexpectedCharacters, UnexpectedEOF
 from pydantic import BaseModel
 
-from .parsers import date_preparser
+from .utils import date_preparser
 
 
 class TimeZone(BaseModel):
