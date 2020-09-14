@@ -9,12 +9,13 @@ from gedcomx.date import DateFormat
 @pytest.mark.parametrize(
     "value",
     [
-        "+1752-01-18T22:14:3Z",  # this is the example that does not follow own specs!
+        "+1752-01-18T22:14:03Z",
         "+1964-11-14T10-07:00",
         "+1889-05-17T14:23",
         "+1492-07-27",
         "+0186-03",
         "-1321",
+        "+0000-02-29",
     ],
 )
 def test_parse_simple_date(value):

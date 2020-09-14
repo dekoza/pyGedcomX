@@ -5,6 +5,7 @@ https://github.com/FamilySearch/gedcomx/blob/master/specifications/date-format-s
 import re
 from typing import Optional
 
+import pendulum
 from lark.exceptions import UnexpectedCharacters, UnexpectedEOF
 from pydantic import BaseModel
 
@@ -51,21 +52,39 @@ class Recurrence(DateRange):
     repetitions: Optional[int]
 
 
-class DateFormat:
+class DateFormat(str):
+    """
+    Please note that GEDCOM X uses ISO 8601:2004 (aka astronomical) notation
+    which means that the year 1 BCE is written as "+0000".
+    See: http://dotat.at/tmp/ISO_8601-2004_E.pdf
+    """
+
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
 
+    @staticmethod
+    def _check_with_pendulum(value: str) -> None:
+        # Pendulum counts years from 1CE onward so we need this hack to
+        # have proper handling of year 0000 (1BCE) which is a leap year
+        # in proleptic Gregorian calendar.
+        if value[1:5] == "0000":
+            value = f"+2000{value[5:]}"
+        pendulum.parse(value[1:])
+
     @classmethod
-    def validate(cls, value):
+    def validate(cls, value: str):
         try:
             parse_tree = date_preparser.parse(value)
             for subtree in parse_tree.iter_subtrees():
                 for node in subtree.children:
                     if getattr(node, "type", None) is not None:
-                        # TODO: check if pendulum accepts the date
+                        # At this point lark has proven that at least the date
+                        # looks kinda OK. Let's use pendulum to be sure.
+                        if node.type == "SIMPLE_DATE":
+                            cls._check_with_pendulum(node.value)
                         if node.type == "DURATION":
                             assert re.match(duration_pattern, node.value)
         except (UnexpectedCharacters, UnexpectedEOF, AssertionError, TypeError):
             raise ValueError("invalid date format")
-        return value
+        return cls(value)
