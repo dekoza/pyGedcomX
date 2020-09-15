@@ -10,6 +10,11 @@ packages = [
 readme = "README.rst"
 repository = "https://github.com/dekoza/pyGedcomX"
 keywords = ["genealogy"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Topic :: Sociology :: Genealogy",
+    "Typing :: Typed",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"

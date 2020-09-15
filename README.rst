@@ -2,6 +2,12 @@
 Welcome to pyGedcomX
 ====================
 
+.. image:: https://img.shields.io/pypi/pyversions/pygedcomx
+    :target: https://pypi.org/project/pygedcomx/
+.. image:: https://img.shields.io/pypi/v/pygedcomx
+    :target: https://pypi.org/project/pygedcomx/
+.. image:: https://img.shields.io/pypi/format/pygedcomx
+    :target: https://pypi.org/project/pygedcomx/
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
