@@ -22,3 +22,7 @@ repos:
     rev: 3.8.3
     hooks:
     -   id: flake8
+-   repo: https://github.com/myint/rstcheck
+    rev: 'master'
+    hooks:
+    -   id: rstcheck

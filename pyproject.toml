@@ -25,6 +25,8 @@ pre-commit = "^2.7.1"
 black = "^20.8b1"
 ipython = "^7.18.1"
 ipdb = "^0.13.3"
+sphinx = "^3.2.1"
+rstcheck = "^3.3.1"
 
 [tool.isort]
 profile = "black"
