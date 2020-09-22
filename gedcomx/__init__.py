@@ -3,7 +3,5 @@ try:
 except ModuleNotFoundError:
     import importlib_metadata
 
-try:
-    __version__ = importlib_metadata.version(__name__)
-except importlib_metadata.PackageNotFoundError:
-    pass
+__version__ = importlib_metadata.version("pyGedcomX")
+__author__ = "Dominik Kozaczko"

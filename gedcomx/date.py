@@ -75,13 +75,12 @@ class DateFormat(str):
     def validate(cls, value: str):
         try:
             parse_tree = date_preparser.parse(value)
-            for subtree in parse_tree.iter_subtrees():
-                for node in subtree.children:
-                    if getattr(node, "type", None) is not None:
-                        # At this point lark has proven that duration is OK and
-                        # the date looks kinda OK. Let's use pendulum to be sure.
-                        if node.type == "SIMPLE_DATE":
-                            cls._check_with_pendulum(node.value)
+            for node in parse_tree.scan_values(
+                lambda o: getattr(o, "type", None) == "SIMPLE_DATE"
+            ):
+                # At this point lark has proven that duration is OK and
+                # the date looks kinda OK. Let's use pendulum to be sure.
+                cls._check_with_pendulum(node.value)
         except (UnexpectedCharacters, UnexpectedEOF, AssertionError, TypeError):
             raise ValueError("invalid date format")
         return cls(value)
