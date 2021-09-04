@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyGedcomX"
-version = "0.0.1"
+version = "0.0.2"
 description = "GEDCOM X toolbox for Python"
 authors = ["Dominik Kozaczko <dominik@kozaczko.info>"]
 license = "Apache-2.0"
@@ -20,22 +20,23 @@ classifiers = [
 python = "^3.8"
 importlib-metadata = {version = "^1.0", python = "<3.8"}
 pendulum = "^2.1.2"
-pydantic = "^1.6.1"
-language-tags = "^1.0.0"
-lark-parser = "^0.9.0"
+pydantic = "^1.8.2"
+language-tags = "^1.1.0"
+lark-parser = "^0.12.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^5.2"
-pre-commit = "^2.7.1"
-black = "^20.8b1"
-ipython = "^7.18.1"
-ipdb = "^0.13.3"
+pre-commit = "^2.15.0"
+black = "^21.8b0"
+ipython = "^7.27.0"
+ipdb = "^0.13.9"
 sphinx = "^3.2.1"
 rstcheck = "^3.3.1"
 
 [tool.isort]
 profile = "black"
 src_paths = ["gedcomx", "tests"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.masonry.api"

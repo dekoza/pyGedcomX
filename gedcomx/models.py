@@ -333,3 +333,6 @@ class GedcomXObject(GedcomXElement):
     documents: Optional[List[Document]]
     places: Optional[List[PlaceReference]]
     groups: Optional[List[Group]]
+
+    def save_file(filename: str):
+        pass
