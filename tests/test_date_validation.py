@@ -19,7 +19,7 @@ from gedcomx.date import DateFormat
     ],
 )
 def test_parse_simple_date(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,7 @@ def test_parse_simple_date(value):
     ],
 )
 def test_parse_duration(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -46,7 +46,7 @@ def test_parse_duration(value):
     ],
 )
 def test_closed_date_range(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -60,7 +60,7 @@ def test_closed_date_range(value):
     ],
 )
 def test_open_date_range(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -72,7 +72,7 @@ def test_open_date_range(value):
     ],
 )
 def test_recurring(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -85,7 +85,7 @@ def test_recurring(value):
     ],
 )
 def test_approx_date(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(
@@ -102,7 +102,7 @@ def test_approx_date(value):
     ],
 )
 def test_approx_date_range(value):
-    assert DateFormat(value)
+    assert DateFormat(value) == value
 
 
 @pytest.mark.parametrize(

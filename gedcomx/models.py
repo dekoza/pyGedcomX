@@ -129,7 +129,7 @@ class Conclusion(GedcomXElement):
     id: Union[None, str]
     lang: Union[None, Language]
     sources: Union[None, list[SourceReference]]
-    analysis: Union[None, Union[ResourceReference, GedURI]]
+    analysis: Union[ResourceReference, GedURI, None]
     notes: Union[None, list[Note]]
     confidence: Union[None, Confidence]
     attribution: Union[None, Attribution]
@@ -252,12 +252,12 @@ class SourceDescription(GedcomXElement):
     resourceType: Union[None, ResourceType]
     citations: Union[SourceCitation, list[SourceCitation]]
     mediaType: Union[None, str]
-    about: Union[None, Union[ResourceReference, GedURI]]
-    mediator: Union[None, Union[ResourceReference, GedURI]]
-    publisher: Union[None, Union[ResourceReference, GedURI]]
+    about: Union[ResourceReference, GedURI, None]
+    mediator: Union[ResourceReference, GedURI, None]
+    publisher: Union[ResourceReference, GedURI, None]
     authors: Union[None, list[Union[ResourceReference, GedURI]]]
     sources: Union[None, list[SourceReference]]
-    analysis: Union[None, Union[ResourceReference, GedURI]]
+    analysis: Union[ResourceReference, GedURI, None]
     componentOf: Union[None, SourceReference]
     titles: Union[None, list[TextValue]]
     notes: Union[None, list[Note]]
@@ -269,20 +269,20 @@ class SourceDescription(GedcomXElement):
     created: Union[None, datetime]
     modified: Union[None, datetime]
     published: Union[None, datetime]
-    repository: Union[None, Union[ResourceReference, GedURI]]
+    repository: Union[ResourceReference, GedURI, None]
 
 
 class Agent(GedcomXElement):
     id: Union[None, str]
     identifiers: Union[None, list[Identifier]]
     names: Union[None, list[TextValue]]
-    homepage: Union[None, Union[ResourceReference, HttpUrl]]
-    openid: Union[None, Union[ResourceReference, HttpUrl]]
+    homepage: Union[ResourceReference, HttpUrl, None]
+    openid: Union[ResourceReference, HttpUrl, None]
     accounts: Union[None, OnlineAccount]
     emails: Union[None, list[Union[ResourceReference, Email]]]
     phones: Union[None, list[Union[ResourceReference, str]]]
     addresses: Union[None, list[Address]]
-    person: Union[None, Union[ResourceReference, GedURI]]
+    person: Union[ResourceReference, GedURI, None]
 
 
 class Event(Subject):
@@ -303,12 +303,12 @@ class Document(Conclusion):
 class PlaceDescription(Subject):
     names: list[TextValue]
     type: Union[None, GedcomXIdentifier]
-    place: Union[None, Union[ResourceReference, NetGedcomXURI]]
-    jurisdiction: Union[None, Union[ResourceReference, GedURI]]
+    place: Union[ResourceReference, NetGedcomXURI, None]
+    jurisdiction: Union[ResourceReference, GedURI, None]
     latitude: Union[None, float]
     longitude: Union[None, float]
     temporalDescription: Union[None, Date]
-    spatialDescription: Union[None, Union[ResourceReference, GedURI]]
+    spatialDescription: Union[ResourceReference, GedURI, None]
 
 
 class Group(Subject):
@@ -324,6 +324,7 @@ class GedcomXObject(GedcomXElement):
     """
 
     id: Union[None, str]
+    lang: Union[None, Language]
     attribution: Union[None, Attribution]
     persons: Union[None, list[Person]]
     relationships: Union[None, list[Relationship]]
@@ -333,6 +334,14 @@ class GedcomXObject(GedcomXElement):
     documents: Union[None, list[Document]]
     places: Union[None, list[PlaceReference]]
     groups: Union[None, list[Group]]
+    description: Union[None, GedURI]  # must resolve to SourceDescription
 
-    def save_file(filename: str):
+    placeDescriptions: Union[None, list[PlaceDescription]]
+    notes: Union[None, Note]
+    sourceReferences: Union[None, list[SourceReference]]
+    genders: Union[None, list[Gender]]
+    names: Union[None, list[Name]]
+    facts: Union[None, list[Fact]]
+
+    def save_file(self, filename: str):
         pass
