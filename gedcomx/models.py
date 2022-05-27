@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Union
 
 import language_tags
 from pydantic import AnyUrl, BaseModel, HttpUrl
@@ -79,8 +79,8 @@ class ResourceReference(GedcomXElement):
 
 
 class Date(GedcomXElement):
-    original: Optional[str]
-    formal: Optional[DateFormat]
+    original: Union[str, None]
+    formal: Union[DateFormat, None]
 
 
 class Email(str):
@@ -99,40 +99,40 @@ class Email(str):
 
 
 class Attribution(GedcomXElement):
-    contributor: Optional[Union[ResourceReference, GedURI]]
-    modified: Optional[datetime]
-    changeMessage: Optional[str]
-    creator: Optional[Union[ResourceReference, GedURI]]
-    created: Optional[datetime]
+    contributor: Union[ResourceReference, GedURI, None]
+    modified: Union[datetime, None]
+    changeMessage: Union[str, None]
+    creator: Union[ResourceReference, GedURI, None]
+    created: Union[datetime, None]
 
 
 class Qualifier(GedcomXElement):
     name: GedURI
-    value: Optional[str]
+    value: Union[str, None]
 
 
 class SourceReference(GedcomXElement):
     description: str
-    descriptionId: Optional[str]
-    attribution: Optional[Attribution]
-    qualifiers: Optional[List[Qualifier]]
+    descriptionId: Union[str, None]
+    attribution: Union[Attribution, None]
+    qualifiers: Union[None, list[Qualifier]]
 
 
 class Note(GedcomXElement):
-    lang: Optional[Language]
-    subject: Optional[str]
+    lang: Union[None, Language]
+    subject: Union[None, str]
     text: str
-    attribution: Optional[Attribution]
+    attribution: Union[None, Attribution]
 
 
 class Conclusion(GedcomXElement):
-    id: Optional[str]
-    lang: Optional[Language]
-    sources: Optional[List[SourceReference]]
-    analysis: Optional[Union[ResourceReference, GedURI]]
-    notes: Optional[List[Note]]
-    confidence: Optional[Confidence]
-    attribution: Optional[Attribution]
+    id: Union[None, str]
+    lang: Union[None, Language]
+    sources: Union[None, list[SourceReference]]
+    analysis: Union[None, Union[ResourceReference, GedURI]]
+    notes: Union[None, list[Note]]
+    confidence: Union[None, Confidence]
+    attribution: Union[None, Attribution]
 
 
 class Identifier(GedcomXElement):
@@ -142,14 +142,14 @@ class Identifier(GedcomXElement):
 
 class EvidenceReference(GedcomXElement):
     resource: GedURI
-    attribution: Optional[Attribution]
+    attribution: Union[None, Attribution]
 
 
 class Subject(Conclusion):
-    extracted: Optional[bool] = False
-    evidence: Optional[List[EvidenceReference]]
-    media: Optional[List[SourceReference]]
-    identifiers: Optional[List[Identifier]]
+    extracted: Union[None, bool] = False
+    evidence: Union[None, list[EvidenceReference]]
+    media: Union[None, list[SourceReference]]
+    identifiers: Union[None, list[Identifier]]
 
 
 class Gender(Conclusion):
@@ -157,57 +157,57 @@ class Gender(Conclusion):
 
 
 class PlaceReference(GedcomXElement):
-    original: Optional[str]
-    descriptionRef: Optional[HttpUrl]
+    original: Union[None, str]
+    descriptionRef: Union[None, HttpUrl]
 
 
 class NamePart(GedcomXElement):
-    type: Optional[NamePartType]
+    type: Union[None, NamePartType]
     value: str
-    qualifiers: Optional[Qualifier]
+    qualifiers: Union[None, Qualifier]
 
 
 class NameForm(GedcomXElement):
-    lang: Optional[Language]
-    fullText: Optional[str]
-    parts: Optional[List[NamePart]]
+    lang: Union[None, Language]
+    fullText: Union[None, str]
+    parts: Union[None, list[NamePart]]
 
 
 class Name(Conclusion):
-    type: Optional[NameType]
-    nameForms: List[NameForm]
-    date: Optional[Date]
+    type: Union[None, NameType]
+    nameForms: list[NameForm]
+    date: Union[None, Date]
 
 
 class Fact(Conclusion):
     type: FactType
-    date: Optional[Date]
-    place: Optional[PlaceReference]
-    value: Optional[str]
-    qualifiers: Optional[Qualifier]
+    date: Union[None, Date]
+    place: Union[None, PlaceReference]
+    value: Union[None, str]
+    qualifiers: Union[None, Qualifier]
 
 
 class Person(Subject):
-    private: Optional[bool]
-    gender: Optional[Gender]
-    names: Optional[List[Name]]
-    facts: Optional[List[Fact]]
+    private: Union[None, bool]
+    gender: Union[None, Gender]
+    names: Union[None, list[Name]]
+    facts: Union[None, list[Fact]]
 
 
 class Relationship(Subject):
-    type: Optional[RelationshipType]
+    type: Union[None, RelationshipType]
     person1: Union[ResourceReference, GedURI]
     person2: Union[ResourceReference, GedURI]
-    facts: Optional[List[Fact]]
+    facts: Union[None, list[Fact]]
 
 
 class SourceCitation(GedcomXElement):
-    lang: Optional[Language]
+    lang: Union[None, Language]
     value: str
 
 
 class TextValue(GedcomXElement):
-    lang: Optional[Language]
+    lang: Union[None, Language]
     value: str
 
 
@@ -217,105 +217,105 @@ class OnlineAccount(GedcomXElement):
 
 
 class Address(GedcomXElement):
-    value: Optional[str]
-    city: Optional[str]
-    country: Optional[str]
-    postalCode: Optional[str]
-    stateOrProvince: Optional[str]
-    street: Optional[str]
-    street2: Optional[str]
-    street3: Optional[str]
-    street4: Optional[str]
-    street5: Optional[str]
-    street6: Optional[str]
+    value: Union[None, str]
+    city: Union[None, str]
+    country: Union[None, str]
+    postalCode: Union[None, str]
+    stateOrProvince: Union[None, str]
+    street: Union[None, str]
+    street2: Union[None, str]
+    street3: Union[None, str]
+    street4: Union[None, str]
+    street5: Union[None, str]
+    street6: Union[None, str]
 
 
 class EventRole(Conclusion):
     person: Union[ResourceReference, GedURI]
-    type: Optional[RoleType]
+    type: Union[None, RoleType]
 
 
 class GroupRole(Conclusion):
     person: Union[ResourceReference, GedURI]
-    type: Optional[RoleType]
-    date: Optional[Date]
-    details: Optional[str]
+    type: Union[None, RoleType]
+    date: Union[None, Date]
+    details: Union[None, str]
 
 
 class Coverage(GedcomXElement):
-    spatial: Optional[PlaceReference]
-    temporal: Optional[Date]
+    spatial: Union[None, PlaceReference]
+    temporal: Union[None, Date]
 
 
 class SourceDescription(GedcomXElement):
-    id: Optional[str]
-    resourceType: Optional[ResourceType]
-    citations: Union[SourceCitation, List[SourceCitation]]
-    mediaType: Optional[str]
-    about: Optional[Union[ResourceReference, GedURI]]
-    mediator: Optional[Union[ResourceReference, GedURI]]
-    publisher: Optional[Union[ResourceReference, GedURI]]
-    authors: Optional[List[Union[ResourceReference, GedURI]]]
-    sources: Optional[List[SourceReference]]
-    analysis: Optional[Union[ResourceReference, GedURI]]
-    componentOf: Optional[SourceReference]
-    titles: Optional[List[TextValue]]
-    notes: Optional[List[Note]]
-    attribution: Optional[Attribution]
-    rights: Optional[List[GedURI]]
-    coverage: Optional[List[Coverage]]
-    descriptions: Optional[List[TextValue]]
-    identifiers: Optional[List[Identifier]]
-    created: Optional[datetime]
-    modified: Optional[datetime]
-    published: Optional[datetime]
-    repository: Optional[Union[ResourceReference, GedURI]]
+    id: Union[None, str]
+    resourceType: Union[None, ResourceType]
+    citations: Union[SourceCitation, list[SourceCitation]]
+    mediaType: Union[None, str]
+    about: Union[None, Union[ResourceReference, GedURI]]
+    mediator: Union[None, Union[ResourceReference, GedURI]]
+    publisher: Union[None, Union[ResourceReference, GedURI]]
+    authors: Union[None, list[Union[ResourceReference, GedURI]]]
+    sources: Union[None, list[SourceReference]]
+    analysis: Union[None, Union[ResourceReference, GedURI]]
+    componentOf: Union[None, SourceReference]
+    titles: Union[None, list[TextValue]]
+    notes: Union[None, list[Note]]
+    attribution: Union[None, Attribution]
+    rights: Union[None, list[GedURI]]
+    coverage: Union[None, list[Coverage]]
+    descriptions: Union[None, list[TextValue]]
+    identifiers: Union[None, list[Identifier]]
+    created: Union[None, datetime]
+    modified: Union[None, datetime]
+    published: Union[None, datetime]
+    repository: Union[None, Union[ResourceReference, GedURI]]
 
 
 class Agent(GedcomXElement):
-    id: Optional[str]
-    identifiers: Optional[List[Identifier]]
-    names: Optional[List[TextValue]]
-    homepage: Optional[Union[ResourceReference, HttpUrl]]
-    openid: Optional[Union[ResourceReference, HttpUrl]]
-    accounts: Optional[OnlineAccount]
-    emails: Optional[List[Union[ResourceReference, Email]]]
-    phones: Optional[List[Union[ResourceReference, str]]]
-    addresses: Optional[List[Address]]
-    person: Optional[Union[ResourceReference, GedURI]]
+    id: Union[None, str]
+    identifiers: Union[None, list[Identifier]]
+    names: Union[None, list[TextValue]]
+    homepage: Union[None, Union[ResourceReference, HttpUrl]]
+    openid: Union[None, Union[ResourceReference, HttpUrl]]
+    accounts: Union[None, OnlineAccount]
+    emails: Union[None, list[Union[ResourceReference, Email]]]
+    phones: Union[None, list[Union[ResourceReference, str]]]
+    addresses: Union[None, list[Address]]
+    person: Union[None, Union[ResourceReference, GedURI]]
 
 
 class Event(Subject):
-    type: Optional[EventType]
-    date: Optional[Date]
-    place: Optional[PlaceReference]
-    roles: Optional[List[EventRole]]
+    type: Union[None, EventType]
+    date: Union[None, Date]
+    place: Union[None, PlaceReference]
+    roles: Union[None, list[EventRole]]
 
 
 class Document(Conclusion):
-    type: Optional[DocumentType]
-    extracted: Optional[bool] = False
-    textType: Optional[str]
+    type: Union[None, DocumentType]
+    extracted: Union[None, bool] = False
+    textType: Union[None, str]
     text: str
-    attribution: Optional[Attribution]
+    attribution: Union[None, Attribution]
 
 
 class PlaceDescription(Subject):
-    names: List[TextValue]
-    type: Optional[GedcomXIdentifier]
-    place: Optional[Union[ResourceReference, NetGedcomXURI]]
-    jurisdiction: Optional[Union[ResourceReference, GedURI]]
-    latitude: Optional[float]
-    longitude: Optional[float]
-    temporalDescription: Optional[Date]
-    spatialDescription: Optional[Union[ResourceReference, GedURI]]
+    names: list[TextValue]
+    type: Union[None, GedcomXIdentifier]
+    place: Union[None, Union[ResourceReference, NetGedcomXURI]]
+    jurisdiction: Union[None, Union[ResourceReference, GedURI]]
+    latitude: Union[None, float]
+    longitude: Union[None, float]
+    temporalDescription: Union[None, Date]
+    spatialDescription: Union[None, Union[ResourceReference, GedURI]]
 
 
 class Group(Subject):
-    names: List[TextValue]
-    date: Optional[Date]
-    place: Optional[PlaceReference]
-    roles: Optional[GroupRole]
+    names: list[TextValue]
+    date: Union[None, Date]
+    place: Union[None, PlaceReference]
+    roles: Union[None, GroupRole]
 
 
 class GedcomXObject(GedcomXElement):
@@ -323,16 +323,16 @@ class GedcomXObject(GedcomXElement):
     Main container used only to read/write files.
     """
 
-    id: Optional[str]
-    attribution: Optional[Attribution]
-    persons: Optional[List[Person]]
-    relationships: Optional[List[Relationship]]
-    sourceDescriptions: Optional[List[SourceDescription]]
-    agents: Optional[List[Agent]]
-    events: Optional[List[Event]]
-    documents: Optional[List[Document]]
-    places: Optional[List[PlaceReference]]
-    groups: Optional[List[Group]]
+    id: Union[None, str]
+    attribution: Union[None, Attribution]
+    persons: Union[None, list[Person]]
+    relationships: Union[None, list[Relationship]]
+    sourceDescriptions: Union[None, list[SourceDescription]]
+    agents: Union[None, list[Agent]]
+    events: Union[None, list[Event]]
+    documents: Union[None, list[Document]]
+    places: Union[None, list[PlaceReference]]
+    groups: Union[None, list[Group]]
 
     def save_file(filename: str):
         pass

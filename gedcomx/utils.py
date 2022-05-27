@@ -1,4 +1,5 @@
 # flake8: noqa
+import copy
 import re
 import xml.etree.ElementTree as ET
 from collections.abc import Mapping
@@ -11,15 +12,17 @@ def xmlize(obj):
         return obj.xml()
     tag = obj.__class__.__name__
     e = ET.Element(tag)
+    ...  # TODO: FINISH ME!
+    return e
 
 
 date_pattern = re.compile(
-    # against specs core, but respects examples from specs
+    # against specs core, but respects examples from specs (sic!)
     r"""
     ^
     (
         (?P<approx>A?)
-        (?P<year>[\+-]\d{4})
+        (?P<year>[-+]\d{4})
         (
             -
             (?P<month>\d{2})
@@ -38,7 +41,7 @@ date_pattern = re.compile(
                         )?
                     )?
                     (?P<tz>
-                        [\+-]\d{2}
+                        [-+]\d{2}
                         (:\d{2})?
                         | Z
                     )?
@@ -58,14 +61,14 @@ duration_pattern = re.compile(
     r"""
     ^
     P
-    (?P<years>\d+Y)?
-    (?P<months>\d+M)?
-    (?P<days>\d+D)?
+    ((?P<years>\d+)Y)?
+    ((?P<months>\d+)M)?
+    ((?P<days>\d+)D)?
     (
         T
-        (?P<hours>\d+H)?
-        (?P<minutes>\d+M)?
-        (?P<seconds>\d+S)?
+        ((?P<hours>\d+)H)?
+        ((?P<minutes>\d+)M)?
+        ((?P<seconds>\d+)S)?
     )?
     $
     """,
@@ -127,7 +130,7 @@ class MultiValueDict(dict):
         super().__init__(key_to_list_mapping)
 
     def __repr__(self):
-        return "<%s: %s>" % (self.__class__.__name__, super().__repr__())
+        return f"<{self.__class__.__name__}: {super().__repr__()}>"
 
     def __getitem__(self, key):
         """

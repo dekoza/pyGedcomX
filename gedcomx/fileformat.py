@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import Union
 
 from pydantic import AnyUrl, BaseModel
 
@@ -18,22 +18,22 @@ class HeaderMixin:
 
 
 class MainHeader(HeaderMixin, CaseInsensitiveMapping):
-    X_DC_conformsTo: List[Union[GedcomXIdentifier, str]]
-    User_Agent: Optional[str]
-    X_DC_created: Optional[str]
-    X_DC_creator: Optional[AnyUrl]
+    X_DC_conformsTo: list[Union[GedcomXIdentifier, str]]
+    User_Agent: Union[None, str]
+    X_DC_created: Union[None, str]
+    X_DC_creator: Union[None, AnyUrl]
 
 
 class ResourceHeader(HeaderMixin, CaseInsensitiveMapping):
     Name: str
-    Content_Type: Optional[str]
-    ETag: Optional[str]
-    X_DC_modified: Optional[str]
+    Content_Type: Union[None, str]
+    ETag: Union[None, str]
+    X_DC_modified: Union[None, str]
 
 
 class Manifest(BaseModel):
     main_header: MainHeader
-    resource_headers: List[ResourceHeader]
+    resource_headers: list[ResourceHeader]
 
     def __str__(self) -> str:
         resources = "\n\n".join(str(h) for h in self.resource_headers)

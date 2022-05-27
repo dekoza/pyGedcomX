@@ -19,14 +19,14 @@ from gedcomx.date import DateFormat
     ],
 )
 def test_parse_simple_date(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
     "value",
     [
         # These needed to be prepended with minimal simple date
-        # because doesn't allow duration being alone.
+        # because specification doesn't allow duration being alone.
         "+1964/P17Y6M2D",
         "+1964/P186D",
         "+1964/PT5H17M",
@@ -34,7 +34,7 @@ def test_parse_simple_date(value):
     ],
 )
 def test_parse_duration(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -46,7 +46,7 @@ def test_parse_duration(value):
     ],
 )
 def test_closed_date_range(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -60,7 +60,7 @@ def test_closed_date_range(value):
     ],
 )
 def test_open_date_range(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -72,7 +72,7 @@ def test_open_date_range(value):
     ],
 )
 def test_recurring(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -85,7 +85,7 @@ def test_recurring(value):
     ],
 )
 def test_approx_date(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -102,7 +102,7 @@ def test_approx_date(value):
     ],
 )
 def test_approx_date_range(value):
-    assert DateFormat.validate(value)
+    assert DateFormat(value)
 
 
 @pytest.mark.parametrize(
@@ -125,4 +125,4 @@ def test_approx_date_range(value):
 )
 def test_if_bad_format_raises_exceptions(value):
     with pytest.raises(ValueError):
-        DateFormat.validate(value)
+        DateFormat(value)

@@ -1,3 +1,4 @@
+# flake8: noqa
 example_json = r"""
 {
   "attribution" : {
