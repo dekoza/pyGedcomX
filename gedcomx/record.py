@@ -4,7 +4,7 @@ Implementation of https://github.com/FamilySearch/gedcomx-record/
 
 from typing import Union
 
-from .enums import FieldValueType
+from .enums import EventTypes, FieldValueType
 from .models import (
     Attribution,
     Conclusion,
@@ -42,9 +42,7 @@ class FieldValue(Conclusion):
     type: Union[None, FieldValueType]
     labelId: Union[None, str]
     text: Union[None, str]
-    datatype: Union[
-        None,
-    ]
+    datatype: Union[None, EventTypes]  # TODO: Specs muddy here, check this
     resource: Union[None, GedURI]
 
 
