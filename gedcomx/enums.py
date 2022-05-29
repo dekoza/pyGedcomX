@@ -246,15 +246,20 @@ class EventType(BaseEventType):
     retirement = "http://gedcomx.org/Retirement"
 
 
-class RoleType(GedcomXIdentifier):
+class RoleType(GedcomXIdentifier, Enum):
     principal = "http://gedcomx.org/Principal"
     participant = "http://gedcomx.org/Participant"
     official = "http://gedcomx.org/Official"
     witness = "http://gedcomx.org/Witness"
 
 
-class DocumentType(GedcomXIdentifier):
+class DocumentType(GedcomXIdentifier, Enum):
     abstract = "http://gedcomx.org/Abstract"
     transcription = "http://gedcomx.org/Transcription"
     translation = "http://gedcomx.org/Translation"
     analysis = "http://gedcomx.org/Analysis"
+
+
+class FieldValueType(GedcomXIdentifier, Enum):
+    original = "http://gedcomx.org/Original"
+    interpreted = "http://gedcomx.org/Interpreted"

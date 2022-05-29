@@ -169,7 +169,7 @@ class MultiValueDict(dict):
     def update(self, *args, **kwargs):
         """Extend rather than replace existing key lists."""
         if len(args) > 1:
-            raise TypeError("update expected at most 1 argument, got %d" % len(args))
+            raise TypeError(f"update expected at most 1 argument, got {len(args)}")
         if args:
             other_dict = args[0]
             if isinstance(other_dict, MultiValueDict):
@@ -181,7 +181,8 @@ class MultiValueDict(dict):
                         self.setlistdefault(key).append(value)
                 except TypeError:
                     raise ValueError(
-                        "MultiValueDict.update() takes either a MultiValueDict or dictionary"
+                        "MultiValueDict.update() takes either "
+                        "a MultiValueDict or dictionary"
                     )
         for key, value in kwargs.items():
             self.setlistdefault(key).append(value)
@@ -195,12 +196,12 @@ def _destruct_iterable_mapping_values(data):
     for i, elem in enumerate(data):
         if len(elem) != 2:
             raise ValueError(
-                "dictionary update sequence element #{} has "
-                "length {}; 2 is required.".format(i, len(elem))
+                f"dictionary update sequence element #{i} has "
+                f"length {len(elem)}; 2 is required."
             )
         if not isinstance(elem[0], str):
             raise ValueError(
-                "Element key %r invalid, only strings are allowed" % elem[0]
+                f"Element key {elem[0]!r} invalid, only strings are allowed"
             )
         yield tuple(elem)
 

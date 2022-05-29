@@ -334,7 +334,7 @@ class GedcomXObject(GedcomXElement):
     documents: Union[None, list[Document]]
     places: Union[None, list[PlaceReference]]
     groups: Union[None, list[Group]]
-    description: Union[None, GedURI]  # must resolve to SourceDescription
+    description: Union[None, GedURI]  # URI must resolve to SourceDescription
 
     placeDescriptions: Union[None, list[PlaceDescription]]
     notes: Union[None, Note]
@@ -342,6 +342,3 @@ class GedcomXObject(GedcomXElement):
     genders: Union[None, list[Gender]]
     names: Union[None, list[Name]]
     facts: Union[None, list[Fact]]
-
-    def save_file(self, filename: str):
-        pass
